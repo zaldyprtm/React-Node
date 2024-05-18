@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "animate.css/animate.compat.css";
 import ScrollAnimation from "react-animate-on-scroll";
-import Data from "./data/Data";
+import { Progress } from "./Progress";
+
 
 const CartIcon = () => (
   <svg
@@ -24,12 +26,22 @@ const CoffeeList = () => {
   const [coffeeData, setCoffeeData] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading
 
-  // Simulate data fetching
+  // Fetching Data dari API SERVER
   useEffect(() => {
-    setTimeout(() => {
-      setCoffeeData(Data);
-      setLoading(false);
-    }, 2000); // Simulate a delay of 2 seconds
+    const fetchData = async () => {
+      try {
+        console.log("Fetching coffee data...");
+        const response = await axios.get("http://localhost:3000/api/coffee");
+        console.log("Coffee data fetched:", response.data);
+        setCoffeeData(response.data);
+      } catch (error) {
+        console.error("Error fetching coffee data:", error);
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -71,7 +83,7 @@ const CoffeeList = () => {
                   )}
                   <div className="mt-4">
                     <button className="bg-sky-600 rounded-lg font-inter font-bold w-28 h-8 flex items-center justify-center">
-                      <CartIcon />
+                      <CartIcon  />
                       Order
                     </button>
                   </div>
